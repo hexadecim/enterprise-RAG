@@ -15,9 +15,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.config import settings
-from backend.database import create_all_tables, get_db
-from backend.services.vector_search import search_by_organization, SearchResult
+from config import settings
+from database import create_all_tables, get_db
+from services.vector_search import search_by_organization, SearchResult
 
 import uuid
 

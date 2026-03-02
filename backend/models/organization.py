@@ -12,7 +12,7 @@ from sqlalchemy import Boolean, DateTime, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.database import Base
+from database import Base
 
 
 class Organization(Base):

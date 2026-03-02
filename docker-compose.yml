@@ -1,4 +1,51 @@
 services:
+  # ── PostgreSQL ─────────────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: rag_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: enterprise_rag
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - rag_network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Backend (FastAPI) ───────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rag_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - QDRANT_HOST=vector-db
+      - QDRANT_PORT=6333
+      - QDRANT_COLLECTION=${QDRANT_COLLECTION:-documents}
+      - APP_ENV=${APP_ENV:-development}
+      - DB_ECHO=${DB_ECHO:-false}
+      - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
+    depends_on:
+      db:
+        condition: service_healthy
+      vector-db:
+        condition: service_started
+    networks:
+      - rag_network
+    restart: unless-stopped
+
+  # ── Frontend (Next.js) ─────────────────────────────────────────────────────
   frontend:
     build:
       context: ./frontend
@@ -17,22 +64,7 @@ services:
       - rag_network
     restart: unless-stopped
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: rag_backend
-    ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
-    depends_on:
-      - vector-db
-    networks:
-      - rag_network
-    restart: unless-stopped
-
+  # ── Qdrant Vector DB ───────────────────────────────────────────────────────
   vector-db:
     image: qdrant/qdrant:latest
     container_name: rag_qdrant
@@ -50,4 +82,5 @@ networks:
     driver: bridge
 
 volumes:
+  postgres_data:
   qdrant_data:

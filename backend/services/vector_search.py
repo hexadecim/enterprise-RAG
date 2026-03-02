@@ -26,7 +26,7 @@ from qdrant_client.http.models import (
     ScoredPoint,
 )
 
-from backend.config import settings
+from config import settings
 
 
 # ---------------------------------------------------------------------------

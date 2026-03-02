@@ -2,8 +2,8 @@
 schemas/__init__.py
 """
 
-from backend.schemas.organization import OrganizationCreate, OrganizationRead
-from backend.schemas.user import UserCreate, UserRead
+from schemas.organization import OrganizationCreate, OrganizationRead
+from schemas.user import UserCreate, UserRead
 
 __all__ = [
     "OrganizationCreate",

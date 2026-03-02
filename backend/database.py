@@ -9,7 +9,7 @@ in production prefer Alembic migrations.
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-from backend.config import settings
+from config import settings
 
 
 # ---------------------------------------------------------------------------
@@ -61,7 +61,7 @@ async def get_db() -> AsyncSession:  # type: ignore[return]
 async def create_all_tables() -> None:
     """Create all tables defined in Base.metadata (dev/test only)."""
     # Import models so their metadata is registered before create_all
-    import backend.models  # noqa: F401  # side-effect import
+    import models  # noqa: F401  # side-effect import
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
