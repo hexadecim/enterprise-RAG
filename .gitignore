@@ -1,0 +1,32 @@
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Node
+node_modules/
+frontend/.next/
+frontend/out/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+backend/.venv/
+backend/venv/
+backend/*.egg-info/
+.mypy_cache/
+
+# Docker volumes
+qdrant_data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
